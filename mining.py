@@ -2,6 +2,7 @@ import pyautogui
 import pytesseract
 import time
 import pydirectinput
+import keyboard
 
 picaxe_image_path = 'picaxe.png'
 empty_weapon_slot_image_path = 'empty_weapon_slot.png'
@@ -59,6 +60,8 @@ def space_bar_action():
     time.sleep(0.1)
 
 while True: 
+    print('Starting mining soon ... (spam shift to pause loop)')
+    
     skip_any_button()
     space_bar_action()
 
@@ -73,4 +76,11 @@ while True:
                 time.sleep(0.1)
                 break
 
-    
+    # pause loop
+    if keyboard.is_pressed('shift'):
+        while True:
+            print('pause loop (spam alt to continue)', end='\r')
+            if keyboard.is_pressed('alt'):
+                print()
+                break
+        print('continue loop... (spam shift to pause loop)')

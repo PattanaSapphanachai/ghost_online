@@ -5,6 +5,7 @@ import time
 import pydirectinput
 import multiprocessing
 import cv2
+import keyboard
 
 def find_hp_image():
     try:
@@ -56,6 +57,14 @@ def process_hp(min_hp, hp_button_list):
                         time.sleep(0.1)
             except Exception as e:
                 pass
+        # pause loop
+        if keyboard.is_pressed('shift'):
+            while True:
+                print('pause hp loop (spam alt to continue)', end='\r')
+                if keyboard.is_pressed('alt'):
+                    print()
+                    break
+            print('continue hp loop... (spam shift to pause loop)')
 
 def process_mp(min_mp, mp_button_list):
     while True:
@@ -70,21 +79,30 @@ def process_mp(min_mp, mp_button_list):
                         pydirectinput.keyUp(button)
             except Exception as e:
                 pass
+        # pause loop
+        if keyboard.is_pressed('shift'):
+            while True:
+                print('pause mp loop (spam alt to continue)', end='\r')
+                if keyboard.is_pressed('alt'):
+                    print()
+                    break
+            print('continue mp loop... (spam shift to pause loop)')
 
 if __name__ == '__main__':
-    hp_button = input("HP Potion Button (Seperate by ',') (default 2) :").split(',')
-    hp_to_heal = input("HP Before Heal (remember it's might be delay before heal) (default 3000) :")
-    mp_button = input("MP Potion Button (Seperate by ',') (default 1) :").split(',')
-    mp_to_heal = input("MP Before Heal (remember it's might be delay before heal) (default 3000) :")
-    if hp_button == ['']:
-        hp_button = '2'
-    if hp_to_heal == '':
+    default = input("Want to use default settings? (y to yes) :")
+    if default == 'y':
+        hp_button = ['2','3']
         hp_to_heal = '3000'
-    if mp_button == ['']:
         mp_button = '1'
-    if mp_to_heal == '':
         mp_to_heal = '3000'
-
+    else:
+        hp_button = input("HP Potion Button (Seperate by ',') (default 2, 3) :").split(',')
+        hp_to_heal = input("HP Before Heal (remember it's might be delay before heal) (default 3000) :")
+        mp_button = input("MP Potion Button (Seperate by ',') (default 1) :").split(',')
+        mp_to_heal = input("MP Before Heal (remember it's might be delay before heal) (default 3000) :")
+    print(f"heal HP ({hp_button} when hp < {hp_to_heal})")
+    print(f"heal MP ({mp_button} when mp < {mp_to_heal})")
+    print('Starting heal soon ... (spam shift to pause loop)')
     process1 = multiprocessing.Process(target=process_hp, args=(int(hp_to_heal), hp_button))
     process2 = multiprocessing.Process(target=process_mp, args=(int(mp_to_heal), mp_button))
 
