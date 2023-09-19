@@ -3,9 +3,16 @@ import pytesseract
 import time
 import pydirectinput
 
+picaxe_image_path = 'picaxe.png'
+empty_weapon_slot_image_path = 'empty_weapon_slot.png'
+ok_button_image_path = 'ok.png'
+cancel_button_image_path = 'cancel.png'
+close_button_image_path = 'close.png'
+x_button_image_path = 'x.png'
+
 def find_image(target_image_path):
     try:
-        location = pyautogui.locateOnScreen(target_image_path)
+        location = pyautogui.locateOnScreen(target_image_path, confidence=0.85)
         if location is not None:
             x, y, width, height = location
             center_x = x + (width / 2)
@@ -16,24 +23,45 @@ def find_image(target_image_path):
         return [False,'_','_'] 
     return [False,'_','_'] 
 
-picaxe_image_path = 'picaxe.png'
-empty_weapon_slot_image_path = 'empty_weapon_slot.png'
-ok_button_image_path = 'ok.png'
-cancel_button_image_path = 'cancel.png'
-
-while True: 
+def skip_any_button():
     ok_button = find_image(ok_button_image_path)
     if ok_button[0] == True:
         pyautogui.click(ok_button[1], ok_button[2])
         time.sleep(0.1)
         pyautogui.click(ok_button[1], ok_button[2])
-    time.sleep(0.5)
+        print('click : ok')
+
     cancel_button = find_image(cancel_button_image_path)
     if cancel_button[0] == True:
         pyautogui.click(cancel_button[1], cancel_button[2])
         time.sleep(0.1)
         pyautogui.click(cancel_button[1], cancel_button[2])
-    time.sleep(0.5)
+        print('click : cancel')
+
+    close_button = find_image(close_button_image_path)
+    if close_button[0] == True:
+        pyautogui.click(close_button[1], close_button[2])
+        time.sleep(0.1)
+        pyautogui.click(close_button[1], close_button[2])
+        print('click : close')
+    
+    # x_button = find_image(x_button_image_path)
+    # if x_button[0] == True:
+    #     pyautogui.click(x_button[1], x_button[2])
+    #     time.sleep(0.1)
+    #     pyautogui.click(x_button[1], x_button[2])
+    #     print('click : x')
+ 
+def space_bar_action():
+    pydirectinput.keyDown('space')
+    time.sleep(0.1)
+    pydirectinput.keyUp('space')
+    time.sleep(0.1)
+
+while True: 
+    skip_any_button()
+    space_bar_action()
+
     empty_weapon_slot_found = find_image(empty_weapon_slot_image_path)
     if empty_weapon_slot_found[0] == True:
         while True:
@@ -42,10 +70,7 @@ while True:
                 pyautogui.click(picaxe_found[1], picaxe_found[2])
                 time.sleep(0.1)
                 pyautogui.click(picaxe_found[1], picaxe_found[2])
-                time.sleep(1.5)
+                time.sleep(0.1)
                 break
-    time.sleep(0.5)
-    pydirectinput.keyDown('space')
-    time.sleep(1)
-    pydirectinput.keyUp('space')
-    time.sleep(1)
+
+    
